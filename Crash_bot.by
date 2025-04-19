@@ -1,0 +1,33 @@
+import requests
+import random
+import time
+import os
+
+# API Token ديالك من تيليغرام
+bot_token = os.getenv('BOT_TOKEN')
+chat_id = os.getenv('CHAT_ID')
+
+# دالة باش ترسل رسالة للبوت
+def send_message(message):
+    url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+    params = {
+        'chat_id': chat_id,
+        'text': message
+    }
+    response = requests.get(url, params=params)
+    return response.json()
+
+# دالة باش تولد التنبؤات
+def generate_prediction():
+    multiplier = random.choice([1.2, 1.5, 2.3, 3.0, 5.0, 7.5, 10.0])
+    return f"التوقع للجولة القادمة: {multiplier}x"
+
+# دالة تعمل كل دقيقة وتبعث التنبؤ
+def main():
+    while True:
+        prediction = generate_prediction()
+        send_message(prediction)
+        time.sleep(60)  # ينتظر دقيقة قبل إرسال التنبؤ التالي
+
+if __name__ == '__main__':
+    main()
